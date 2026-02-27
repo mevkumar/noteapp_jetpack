@@ -1,8 +1,12 @@
 package com.app.notesapp.ui.screen
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,14 +30,24 @@ fun AddEditNoteScreen(
     var title by remember { mutableStateOf(oldTitle) }
     var desc by remember { mutableStateOf(oldDesc) }
     val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(20.dp)
     ) {
+        Spacer(modifier = Modifier.height(50.dp))
+        Icon(
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = "Back",
+            modifier = Modifier
+                .size(30.dp)
+                .clickable {
+                    navController.popBackStack()
+                }
+        )
 
+        Spacer(modifier = Modifier.height(50.dp))
         BorderedTextFieldExample(
             value = title,
             onValueChange = { title = it },
@@ -61,12 +75,10 @@ fun AddEditNoteScreen(
                     Toast.makeText(context, "Please enter description", Toast.LENGTH_SHORT).show()
                     return@Button
                 }
+
                 if (id == 0) {
-
                     viewModel.insertNote(title, desc)
-
                 } else {
-
                     viewModel.updateNote(
                         NoteEntity(
                             id = id,
@@ -74,7 +86,6 @@ fun AddEditNoteScreen(
                             description = desc
                         )
                     )
-
                 }
 
                 navController.popBackStack()
@@ -83,6 +94,15 @@ fun AddEditNoteScreen(
         ) {
             Text("Save")
         }
+
+//        Column(
+//            modifier = Modifier.fillMaxSize(),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//
+//
+//        }
     }
 }
 
