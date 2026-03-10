@@ -23,4 +23,9 @@ class NoteRepository(private val dao: NoteDao){
     suspend fun getNoteById(id: Int){
         dao.getNoteById(id)
     }
+
+    fun getNewestNotes() = dao.getNotesNewest()
+
+    fun getOldestNotes() = dao.getNotesOldest()
+
 }
