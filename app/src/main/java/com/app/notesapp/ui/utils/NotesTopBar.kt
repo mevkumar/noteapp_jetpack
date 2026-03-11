@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.app.notesapp.ui.theme.LightGrey
+import com.app.notesapp.ui.theme.orange
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,19 +30,23 @@ fun NotesTopBar(
         ),
         title = {
             Text(
-                "My Notes",
+                "QuickNotes",
+                color = orange,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
             )
         },
         actions = {
 
             IconButton(onClick = onSearchClick) {
-                Icon(Icons.Default.Search, contentDescription = "Search")
+                Icon(Icons.Default.Search,
+                    tint = orange, // icon color
+                    contentDescription = "Search",)
             }
 
             IconButton(onClick = onFilterClick) {
-                Icon(Icons.Default.FilterList, contentDescription = "Filter")
+                Icon(Icons.Default.FilterList,
+                    tint = orange, // icon color
+                    contentDescription = "Filter")
             }
         }
     )

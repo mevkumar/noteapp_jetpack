@@ -2,6 +2,7 @@ package com.app.notesapp.ui.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +19,7 @@ import androidx.navigation.NavController
 import com.app.notesapp.data.viewmodel.NoteViewModel
 import com.app.notesapp.ui.theme.LightGrey
 import com.app.notesapp.ui.theme.darkgrey
+import com.app.notesapp.ui.theme.orange
 import com.app.notesapp.ui.utils.NotesTopBar
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,6 +36,7 @@ fun NoteListScreen(
     var searchText by remember { mutableStateOf("") }
     var showFilter by remember { mutableStateOf(false) }
     var selectedFilter by remember { mutableStateOf("NEWEST") }
+    var expanded by remember {  mutableStateOf<Int?>(null) }
     val filteredNotes = notes.filter {
         it.title.contains(searchText, ignoreCase = true) ||
                 it.description.contains(searchText, ignoreCase = true)
@@ -69,7 +72,7 @@ fun NoteListScreen(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 10.dp, start = 10.dp, end = 10.dp)
+                        .padding(top = 50.dp, start = 10.dp, end = 10.dp)
                 )
             } else {
                 NotesTopBar(
@@ -83,7 +86,7 @@ fun NoteListScreen(
                 containerColor = LightGrey,
                 onClick = { navController.navigate("add/0//") }
             ) {
-                Text("+", fontSize = 30.sp)
+                Text("+", fontSize = 30.sp , color = orange)
             }
         }
     ) { padding ->
@@ -105,7 +108,7 @@ fun NoteListScreen(
                     // Newest
                     Text(
                         "Newest",
-                        color = if (selectedFilter == "NEWEST") Color.Red else Color.Black,
+                        color = if (selectedFilter == "NEWEST") orange else Color.Black,
                         modifier = Modifier
                             .clickable {
                                 viewModel.sortNewest()
@@ -119,7 +122,7 @@ fun NoteListScreen(
                     // Oldest
                     Text(
                         "Oldest",
-                        color = if (selectedFilter == "OLDEST") Color.Red else Color.Black,
+                        color = if (selectedFilter == "OLDEST") orange else Color.Black,
                         modifier = Modifier
                             .clickable {
                                 viewModel.sortOldest()
@@ -175,7 +178,59 @@ fun NoteListScreen(
                         ) {
                             Column(modifier = Modifier.padding(10.dp)) {
 
-                                Text(text = note.title, fontSize = 18.sp)
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding( vertical = 5.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+
+                                    Text(text = note.title, fontSize = 18.sp)
+
+
+
+                                    Box {
+
+                                        Icon(
+                                            imageVector = Icons.Default.MoreVert,
+                                            contentDescription = "More Options",
+                                            tint = orange,
+                                            modifier = Modifier
+                                                .size(20.dp)
+                                                .clickable {
+                                                    expanded = note.id
+                                                }
+                                        )
+
+                                        DropdownMenu(
+                                            expanded = expanded == note.id,
+                                            onDismissRequest = { expanded = null },
+                                            containerColor = Color.White
+                                        ) {
+
+                                            DropdownMenuItem(
+                                                text = { Text("Edit") },
+                                                onClick = {
+                                                    expanded = null
+
+                                                    navController.navigate(
+                                                        "add/${note.id}/${note.title}/${note.description}"
+                                                    )
+                                                }
+                                            )
+
+                                            DropdownMenuItem(
+                                                text = { Text("Delete") },
+                                                onClick = {
+                                                    expanded = null
+                                                    viewModel.deleteNote(note)
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+
+
 
                                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -197,39 +252,12 @@ fun NoteListScreen(
                                     color = Color.Gray
                                 )
 
-                                Spacer(modifier = Modifier.height(10.dp))
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.End
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        tint = Color.Red,
-                                        contentDescription = "Delete",
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .clickable { viewModel.deleteNote(note) }
-                                    )
-                                    Spacer(modifier = Modifier.width(10.dp))
-                                    Icon(
-                                        imageVector = Icons.Default.Edit,
-                                        tint = Color.Black,
-                                        contentDescription = "Edit",
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .clickable {
-                                                navController.navigate(
-                                                    "add/${note.id}/${note.title}/${note.description}"
-                                                )
-                                            }
-                                    )
                                 }
                             }
                         }
                     }
                 }
             }
-        }
+
     }
 }

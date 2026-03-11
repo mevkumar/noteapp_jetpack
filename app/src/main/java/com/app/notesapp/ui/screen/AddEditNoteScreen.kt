@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.app.notesapp.data.local.NoteEntity
 import com.app.notesapp.data.viewmodel.NoteViewModel
+import com.app.notesapp.ui.theme.orange
 
 @Composable
 fun AddEditNoteScreen(
@@ -40,6 +41,7 @@ fun AddEditNoteScreen(
         Icon(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Back",
+            tint = orange,
             modifier = Modifier
                 .size(30.dp)
                 .clickable {
@@ -47,7 +49,7 @@ fun AddEditNoteScreen(
                 }
         )
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(30.dp))
         BorderedTextFieldExample(
             value = title,
             onValueChange = { title = it },
@@ -90,19 +92,15 @@ fun AddEditNoteScreen(
 
                 navController.popBackStack()
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                    containerColor = orange,   // orange background
+            contentColor = Color.White            // text color
+        )
         ) {
             Text("Save")
         }
 
-//        Column(
-//            modifier = Modifier.fillMaxSize(),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//
-//
-//        }
     }
 }
 
